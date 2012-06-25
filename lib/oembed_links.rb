@@ -330,7 +330,7 @@ class OEmbed
 
   # stupid simple copy of URI.extract to allow for looser URI detection
   def self.simple_extract(str, &block)
-    reg = /(https?:\/\/[^\s]+)/i
+    reg = /(https?:\/\/[^\s\<]+)/i
     if block_given?
       str.scan(reg) { yield $& }
       nil
