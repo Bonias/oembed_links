@@ -202,7 +202,7 @@ class OEmbed
     fetcher = @fetchers[@fetch_method] || @fetchers[@fetchers.keys.first]
     formatter = @formatters[@formats[provider]]
     response = fetcher.fetch(purl)
-    formatter.format(response)
+    response ? formatter.format(response) : nil
   end
 
   # Transform all URLs supported by configured providers by the passed-in
@@ -347,6 +347,8 @@ class OEmbed
     unless (vschemes = @schemes.select { |a| u =~ a[0] }).empty?
       regex, provider = vschemes.first
       data = get_url_for_provider(u, provider, *attribs)
+    end
+    if data
       response = OEmbed::Response.new(provider, u, data)
       if block.nil?
         txt.gsub!(u, response.to_s)

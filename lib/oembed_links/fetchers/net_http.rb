@@ -9,7 +9,9 @@ class OEmbed
       end
 
       def fetch(url)
-        Net::HTTP.get(URI.parse(url))
+        uri = URI.parse(url)
+        response = Net::HTTP.get_response(uri)
+        response.is_a?(Net::HTTPSuccess) ? response.body : nil
       end
       
     end
