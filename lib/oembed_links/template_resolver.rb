@@ -71,14 +71,18 @@ class OEmbed
 
     #
     # The evaluated result of the template will be returned.
-    def self.eval_template_for_path(path, url, data, response)
+    def self.eval_template_for_path(path, url, data, response, partial=false)
       rendered_response = nil
-      if defined?(ApplicationController) && defined?(ActionController)
+
+      if partial
+        @app_c ||= ApplicationController.new
+        rendered_response = @app_c.render_to_string(:partial => path, :locals => data.symbolize_keys.merge(:resource_url => url))
+      elsif defined?(ApplicationController) && defined?(ActionController)
+        @app_c ||= ApplicationController.new
         if !defined?(ActionController::TestRequest) ||
             !defined?(ActionController::TestResponse)
-          require 'action_controller/test_process'          
+          require 'action_controller/test_process'
         end
-        @app_c ||= ApplicationController.new
         rendered_response = @app_c.process(ActionController::TestRequest.new,
                                            ActionController::TestResponse.new,
                                            :render_for_file,

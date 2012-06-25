@@ -104,6 +104,8 @@ class OEmbed
       options = (args.last.is_a?(Hash)) ? args.last : { }
       if options[:template]
         @rendered = TemplateResolver.eval_template_for_path(options[:template], @url, @response, self).strip
+      elsif options[:partial]
+        @rendered = TemplateResolver.eval_template_for_path(options[:partial], @url, @response, self, true).strip
       elsif block_given?
         @rendered = yield(@response).strip
       else
